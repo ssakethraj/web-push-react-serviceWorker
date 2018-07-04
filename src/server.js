@@ -17,26 +17,26 @@ webPush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-module.exports = function(app, route) {
-  app.get(route + 'vapidPublicKey', function(req, res) {
-    res.send(process.env.VAPID_PUBLIC_KEY);
-  });
+// module.exports = function(app, route) {
+//   app.get(route + 'vapidPublicKey', function(req, res) {
+//     res.send(process.env.VAPID_PUBLIC_KEY);
+//   });
 
-  app.post(route + 'register', function(req, res) {
-    // A real world application would store the subscription info.
-    res.sendStatus(201);
-  });
+//   app.post(route + 'register', function(req, res) {
+//     // A real world application would store the subscription info.
+//     res.sendStatus(201);
+//   });
 
-  app.post(route + 'sendNotification', function(req, res) {
-    setTimeout(function() {
-      webPush.sendNotification(req.body.subscription)
-      .then(function() {
-        res.sendStatus(201);
-      })
-      .catch(function(error) {
-        res.sendStatus(500);
-        console.log(error);
-      });
-    }, 10000);
-  });
-};
+//   app.post(route + 'sendNotification', function(req, res) {
+//     setTimeout(function() {
+//       webPush.sendNotification(req.body.subscription)
+//       .then(function() {
+//         res.sendStatus(201);
+//       })
+//       .catch(function(error) {
+//         res.sendStatus(500);
+//         console.log(error);
+//       });
+//     }, 10000);
+//   });
+// };
