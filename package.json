@@ -4,16 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently --kill-others \"node scripts/start.js\"",
+    "server": "babel-watch --watch public --watch src src/server/server.js",
+    "webpack-watch": "webpack -d --watch",
+    "start": "concurrently --kill-others \"npm run webpack-watch\" \"npm run server\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
-
   "repository": {
     "type": "git",
     "url": "git@github.com:ssakethraj/web-push-react-serviceWorker.git"
   },
-
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -24,15 +24,19 @@
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-polyfill": "^6.26.0",
+    "concurrently": "3.6.0",
     "express": "^4.16.3",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "sw-precache-webpack-plugin": "0.11.4",
     "webpack": "3.8.1",
+    "webpack-cli": "3.0.8",
+    "web-push": "3.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "babel-watch": "^2.0.7"
   }
 }
