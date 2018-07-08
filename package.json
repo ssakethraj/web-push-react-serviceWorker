@@ -1,11 +1,25 @@
 {
   "name": "pushnotificationtest",
   "version": "0.1.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
     "start": "concurrently --kill-others \"node scripts/start.js\"",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
+
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ssakethraj/web-push-react-serviceWorker.git"
+  },
+
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "https://github.com/Niskarsh/React-basic-setup#readme",
   "dependencies": {
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
