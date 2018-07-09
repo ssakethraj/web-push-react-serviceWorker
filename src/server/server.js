@@ -4,6 +4,23 @@ import express from 'express'
 let app = express()
 const port = process.env.PORT || 3001
 
+
+var webPush = require('web-push');
+
+if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+  console.log("You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY "+
+    "environment variables. You can use the following ones:");
+  console.log(webPush.generateVAPIDKeys());
+  return;
+}
+// Set the keys used for encrypting the push messages.
+webPush.setVapidDetails(
+  'https://serviceworke.rs/',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
+
+
 app.use (express.static (`${__dirname}/../../public`))
 
 app.get ('/', (req, res) => {
