@@ -1,25 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import request from 'request-promise'
+import path from 'path'
 import 'babel-polyfill'
+
 // import './index.css';
 import App from './App';
 import urlBase64ToUint8Array from './tools';
+import registerServiceWorkers from './registerServiceWorker'
+import { worker } from 'cluster';
 var webPush = require('web-push');
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
+registerServiceWorkers()
 
 // Register a Service Worker.
 console.log("Inside script")
-navigator.serviceWorker.register('service-worker.js');
-
+let sPath = path.resolve (__dirname, 'service-worker.js')
+navigator.serviceWorker.register(sPath);
+console.log("I222222222nside script")
 navigator.serviceWorker.ready
 .then(function(registration) {
 console.log("!!!!!!!!!!!")
 // Use the PushManager to get the user's subscription to the push service.
 return registration.pushManager.getSubscription()
 
-console.log(`In last then`)
+
 
 .then(async function(subscription) {
     console.log("@@@@@@@@@@@@@@")
@@ -30,8 +36,12 @@ console.log(`In last then`)
     
     
     // Get the server's public key
-    const response = await process.env.VAPID_PUBLIC_KEY;
-    // const response = await fetch('./vapidPublicKey');
+    // const response = await process.env.VAPID_PUBLIC_KEY;
+    let response
+    await request.get('http://localhost:3001/vapidPublicKey').then(data => {
+        response = data
+    }).catch(e => console.log(`Error fetching pub key ${e}`))
+    // const response = await fetch('/vapidPublicKey');
     const vapidPublicKey = await webPush.generateVAPIDKeys();
     console.log(vapidPublicKey)
     // Chrome doesn't accept the base64-encoded (string) vapidPublicKey yet
@@ -46,12 +56,26 @@ console.log(`In last then`)
         applicationServerKey: convertedVapidKey.publicKey
     });
 });
-console.log(`In last then`)
-}).then(function(subscription) {
+
+}).then(async (subscription) => {
 // Send the subscription details to the server using the Fetch API.
 console.log(subscription)
 console.log("%%%%%%%%%%%%%")
-// fetch('./register', {
+let options = {
+    method: 'POST',
+    uri: 'http://localhost:3001/register',
+    headers: {
+    'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+        subscription: subscription
+        })
+
+}
+await request.post(options).then(data => {
+        
+    }).catch(e => console.log(`Error fetching pub key ${e}`))
+// fetch('/register', {
 //     method: 'post',
 //     headers: {
 //     'Content-type': 'application/json'
@@ -60,7 +84,7 @@ console.log("%%%%%%%%%%%%%")
 //     subscription: subscription
 //     }),
 // });
-document.addEventListener ('DOMContentLoaded', () => {
+
 
     document.getElementById('doIt').onclick = function() {
         // Ask the server to send the client a notification (for testing purposes, in actual
@@ -68,7 +92,7 @@ document.addEventListener ('DOMContentLoaded', () => {
         // in the server).
         console.log("Inside Buttin click");
         console.log(subscription)
-        fetch('./sendNotification', {
+        fetch('/sendNotification', {
         method: 'post',
         headers: {
             'Content-type': 'application/json'
@@ -78,9 +102,9 @@ document.addEventListener ('DOMContentLoaded', () => {
         }),
         });
     };
-})
+
 
 
 }).catch((e) => {
-    console.log(e);
+    console.log(`-----Error`,e);
 });
